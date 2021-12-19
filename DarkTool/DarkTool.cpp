@@ -23,10 +23,10 @@ static void overlay_execute()
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
-		HWND ForegroundWindow = GetForegroundWindow();
-		if (ForegroundWindow == target::hwnd) {
-			HWND TempProcessHwnd = GetWindow(ForegroundWindow, GW_HWNDPREV);
-			SetWindowPos(overlay_window::hwnd, TempProcessHwnd, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		const auto forground_window = GetForegroundWindow();
+		if (forground_window == target::hwnd) {
+			const auto previous_window = GetWindow(forground_window, GW_HWNDPREV);
+			SetWindowPos(overlay_window::hwnd, previous_window, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		}
 		{
 			std::lock_guard lock(mtx);
@@ -34,8 +34,6 @@ static void overlay_execute()
 		}
 		if (GetAsyncKeyState(VK_END) & 1)
 			break;
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	} while (message.message != WM_QUIT);
 	overlay::destroy();
 }
