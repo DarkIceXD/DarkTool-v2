@@ -33,8 +33,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 		return;
 
 	auto smallest_fov = FLT_MAX;
-	vector2 best_angle;
-	vector3 best_hitbox;
+	data::player_data const* p = nullptr;
 	for (const auto& player : data.players)
 	{
 		if (!player.valid)
@@ -49,25 +48,37 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 		if (cfg->aimbot.visibility_check && !player.visible)
 			continue;
 
-		for (size_t i = 0; i <= static_cast<size_t>(hitbox::UPPER_CHEST); i++)
+		const auto& hitbox = player.hitboxes[static_cast<size_t>(hitbox::UPPER_CHEST)];
+		const auto angle = (math::calculate_angle(data.local_player.head, hitbox) - data.local_player.aim_punch_angle).normalized();
+		const auto fov = math::fov(data.local_player.view_angles, angle);
+		if (fov < smallest_fov)
 		{
-			if (!cfg->aimbot.is_hitbox_enabled(static_cast<hitbox>(i)))
-				continue;
-
-			const auto& hitbox = player.hitboxes[i];
-			const auto angle = (math::calculate_angle(data.local_player.head, hitbox) - data.local_player.aim_punch_angle).normalized();
-			const auto fov = math::fov(data.local_player.view_angles, angle);
-			if (fov < smallest_fov)
-			{
-				smallest_fov = fov;
-				best_angle = angle;
-				best_hitbox = hitbox;
-			}
+			smallest_fov = fov;
+			p = &player;
 		}
 	}
 
 	if (smallest_fov >= FLT_MAX || smallest_fov > cfg->aimbot.fov)
 		return;
+
+	smallest_fov = FLT_MAX;
+	vector3 best_hitbox;
+	vector2 best_angle;
+	for (size_t i = 0; i <= static_cast<size_t>(hitbox::MAX); i++)
+	{
+		if (!cfg->aimbot.is_hitbox_enabled(static_cast<hitbox>(i)))
+			continue;
+
+		const auto& hitbox = p->hitboxes[i];
+		const auto angle = (math::calculate_angle(data.local_player.head, hitbox) - data.local_player.aim_punch_angle).normalized();
+		const auto fov = math::fov(data.local_player.view_angles, angle);
+		if (fov < smallest_fov)
+		{
+			smallest_fov = fov;
+			best_hitbox = hitbox;
+			best_angle = angle;
+		}
+	}
 
 	if (cfg->aimbot.show_aim_spot)
 	{
