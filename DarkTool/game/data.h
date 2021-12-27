@@ -5,9 +5,15 @@
 #include <array>
 
 namespace data {
+	constexpr auto bone_count = 19;
 	struct player_data {
 		vector3 origin;
-		std::array<vector3, 19> hitboxes;
+		std::array<vector3, bone_count> hitboxes;
+		struct bone_screen {
+			vector2 screen;
+			bool valid;
+		};
+		std::array<bone_screen, bone_count> hitboxes_screen;
 		int health;
 		int flags;
 		bool visible;

@@ -5,7 +5,6 @@
 #include "../game/hitbox_manager.h"
 #include "../config/config.h"
 #include "../memory/memory.h"
-#include <iostream>
 
 void overlay::draw(data::game& data, ImDrawList* d)
 {
@@ -13,6 +12,25 @@ void overlay::draw(data::game& data, ImDrawList* d)
 		return;
 
 	const auto view_matrix = memory::read<matrix4x4>(offsets::dwViewMatrix);
+
+	if ((cfg->esp.skeleton.base.to_u32() & 0xFF000000) || (cfg->esp.skeleton.visible.to_u32() & 0xFF000000))
+		for (auto& player : data.players)
+		{
+			if (!player.valid)
+				continue;
+
+			for (size_t i = 0; i < player.hitboxes.size(); i++)
+			{
+				const auto& bone = player.hitboxes[i];
+				auto& screen = player.hitboxes_screen[i];
+				screen.valid = false;
+
+				if (!math::world_to_screen(view_matrix, bone, screen.screen))
+					continue;
+
+				screen.valid = true;
+			}
+		}
 	features::esp(data, d, view_matrix);
 	features::aimbot(data, d, view_matrix);
 }

@@ -40,12 +40,15 @@ void features::esp(const data::game& data, ImDrawList* d, const matrix4x4& view_
 		if ((skeleton_color & 0xFF000000))
 			for (const auto& bone_connection : player::hitbox_connections)
 			{
-				vector2 a, b;
-				if (!math::world_to_screen(view_matrix, player.hitboxes[static_cast<size_t>(bone_connection.first)], a) ||
-					!math::world_to_screen(view_matrix, player.hitboxes[static_cast<size_t>(bone_connection.second)], b))
+				const auto& a = player.hitboxes_screen[static_cast<size_t>(bone_connection.first)];
+				if (!a.valid)
 					continue;
 
-				d->AddLine(a, b, skeleton_color);
+				const auto& b = player.hitboxes_screen[static_cast<size_t>(bone_connection.second)];
+				if (!b.valid)
+					continue;
+
+				d->AddLine(a.screen, b.screen, skeleton_color);
 			}
 
 	}
