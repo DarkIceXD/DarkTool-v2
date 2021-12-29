@@ -9,6 +9,7 @@
 
 constexpr auto title = L"Hammer & Chisel Inc.";
 constexpr auto allow_screen_capture = false;
+static auto show_menu = false;
 
 struct window_rect : public RECT
 {
@@ -57,29 +58,73 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CALLBACK mouse_manager(int nCode, WPARAM wParam, LPARAM lParam) {
-	MOUSEHOOKSTRUCT* pMouseStruct = (MOUSEHOOKSTRUCT*)lParam;
-	if (pMouseStruct != NULL) {
-		ImGuiIO& io = ImGui::GetIO();
-		switch (wParam)
-		{
-		case WM_LBUTTONDOWN:
-			io.MouseDown[0] = true;
-			break;
-		case WM_LBUTTONUP:
-			io.MouseDown[0] = false;
-			io.MouseReleased[0] = true;
-			break;
-		case WM_RBUTTONDOWN:
-			io.MouseDown[1] = true;
-			break;
-		case WM_RBUTTONUP:
-			io.MouseDown[1] = false;
-			io.MouseReleased[1] = true;
-			break;
-		}
+static void mouse_handler(WPARAM wParam)
+{
+	auto& io = ImGui::GetIO();
+	switch (wParam)
+	{
+	case WM_LBUTTONDOWN:
+		io.MouseDown[0] = true;
+		break;
+	case WM_RBUTTONDOWN:
+		io.MouseDown[1] = true;
+		break;
+	case WM_MBUTTONDOWN:
+		io.MouseDown[2] = true;
+		break;
+	case WM_LBUTTONUP:
+		io.MouseDown[0] = false;
+		break;
+	case WM_RBUTTONUP:
+		io.MouseDown[1] = false;
+		break;
+	case WM_MBUTTONUP:
+		io.MouseDown[2] = false;
+		break;
 	}
-	return CallNextHookEx(nullptr, nCode, wParam, lParam);
+}
+
+static void keyboard_handler(WPARAM wParam, KBDLLHOOKSTRUCT* info)
+{
+	auto& io = ImGui::GetIO();
+	switch (wParam) {
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if (info->vkCode < 512)
+			io.KeysDown[info->vkCode] = true;
+		GetKeyState(info->vkCode);
+		BYTE keys[256];
+		if (GetKeyboardState(keys)) {
+			constexpr auto size = 10;
+			WCHAR keyPressed[size];
+			if (ToUnicodeEx(info->vkCode, info->scanCode, (BYTE*)keys, keyPressed, size, 2, GetKeyboardLayout(NULL)))
+			{
+				for (int i = 0; i < size; i++)
+				{
+					if (keyPressed[i] > 0 && keyPressed[i] < 0x10000)
+						io.AddInputCharacterUTF16((unsigned short)keyPressed[i]);
+				}
+			}
+		}
+		break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		if (info->vkCode < 512)
+			io.KeysDown[info->vkCode] = false;
+		break;
+	}
+}
+
+LRESULT CALLBACK mouse_hook(int nCode, WPARAM wParam, LPARAM lParam) {
+	if (show_menu && nCode == HC_ACTION)
+		mouse_handler(wParam);
+	return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK keyboard_hook(int nCode, WPARAM wParam, LPARAM lParam) {
+	if (show_menu && nCode == HC_ACTION)
+		keyboard_handler(wParam, reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam));
+	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
 BOOL CALLBACK EnumWindowsProcMy(HWND hwnd, LPARAM lParam)
@@ -228,14 +273,13 @@ bool overlay::create_overlay(const uint32_t pid)
 		style.ItemSpacing = ImVec2(8, 6);
 	}
 
-	SetWindowsHookEx(WH_MOUSE, mouse_manager, 0, GetCurrentThreadId());
+	SetWindowsHookEx(WH_MOUSE, mouse_hook, 0, 0);
+	SetWindowsHookEx(WH_KEYBOARD_LL, keyboard_hook, 0, 0);
 	return true;
 }
 
 void overlay::render(data::game& data)
 {
-	static auto show_menu = false;
-
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
