@@ -5,11 +5,11 @@
 #include <d3d9.h>
 #pragma comment( lib, "d3d9.lib" )
 #include <dwmapi.h>
+#include <iostream>
 #pragma comment( lib, "dwmapi.lib" )
 
 constexpr auto title = L"Hammer & Chisel Inc.";
 constexpr auto allow_screen_capture = false;
-static auto show_menu = false;
 
 struct window_rect : public RECT
 {
@@ -86,12 +86,30 @@ static void mouse_handler(WPARAM wParam)
 
 static void keyboard_handler(WPARAM wParam, KBDLLHOOKSTRUCT* info)
 {
+	
 	auto& io = ImGui::GetIO();
 	switch (wParam) {
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 		if (info->vkCode < 512)
 			io.KeysDown[info->vkCode] = true;
+		std::cout << info->vkCode << '\n';
+		switch (info->vkCode)
+		{
+		case VK_CONTROL:
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+			io.KeyCtrl = true;
+			break;
+		case VK_MENU:
+			io.KeyAlt = true;
+			break;
+		case VK_SHIFT:
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+			io.KeyShift = true;
+			break;
+		}
 		GetKeyState(info->vkCode);
 		BYTE keys[256];
 		if (GetKeyboardState(keys)) {
@@ -111,18 +129,34 @@ static void keyboard_handler(WPARAM wParam, KBDLLHOOKSTRUCT* info)
 	case WM_SYSKEYUP:
 		if (info->vkCode < 512)
 			io.KeysDown[info->vkCode] = false;
+		switch (info->vkCode)
+		{
+		case VK_CONTROL:
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+			io.KeyCtrl = false;
+			break;
+		case VK_MENU:
+			io.KeyAlt = false;
+			break;
+		case VK_SHIFT:
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+			io.KeyShift = false;
+			break;
+		}
 		break;
 	}
 }
 
 LRESULT CALLBACK mouse_hook(int nCode, WPARAM wParam, LPARAM lParam) {
-	if (show_menu && nCode == HC_ACTION)
+	if (nCode == HC_ACTION)
 		mouse_handler(wParam);
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
 LRESULT CALLBACK keyboard_hook(int nCode, WPARAM wParam, LPARAM lParam) {
-	if (show_menu && nCode == HC_ACTION)
+	if (nCode == HC_ACTION)
 		keyboard_handler(wParam, reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam));
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
@@ -272,9 +306,6 @@ bool overlay::create_overlay(const uint32_t pid)
 		style.GrabRounding = style.FrameRounding = 6;
 		style.ItemSpacing = ImVec2(8, 6);
 	}
-
-	SetWindowsHookEx(WH_MOUSE, mouse_hook, 0, 0);
-	SetWindowsHookEx(WH_KEYBOARD_LL, keyboard_hook, 0, 0);
 	return true;
 }
 
@@ -285,9 +316,21 @@ void overlay::render(data::game& data)
 	ImGui::NewFrame();
 	draw(data, ImGui::GetBackgroundDrawList());
 
+	static auto show_menu = false;
 	if (GetAsyncKeyState(VK_INSERT) & 1)
 	{
+		static HHOOK mouse, keyboard;
 		show_menu = !show_menu;
+		if (show_menu)
+		{
+			mouse = SetWindowsHookEx(WH_MOUSE, mouse_hook, 0, GetCurrentThreadId());
+			keyboard = SetWindowsHookEx(WH_KEYBOARD_LL, keyboard_hook, 0, 0);
+		}
+		else
+		{
+			UnhookWindowsHookEx(mouse);
+			UnhookWindowsHookEx(keyboard);
+		}
 		const auto style = show_menu ? WS_EX_TRANSPARENT | WS_EX_NOACTIVATE : WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE;
 		SetWindowLong(overlay_window::hwnd, GWL_EXSTYLE, style);
 	}
