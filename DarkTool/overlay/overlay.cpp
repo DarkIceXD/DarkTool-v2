@@ -5,7 +5,6 @@
 #include <d3d9.h>
 #pragma comment( lib, "d3d9.lib" )
 #include <dwmapi.h>
-#include <iostream>
 #pragma comment( lib, "dwmapi.lib" )
 
 constexpr auto title = L"Hammer & Chisel Inc.";
@@ -93,7 +92,6 @@ static void keyboard_handler(WPARAM wParam, KBDLLHOOKSTRUCT* info)
 	case WM_SYSKEYDOWN:
 		if (info->vkCode < 512)
 			io.KeysDown[info->vkCode] = true;
-		std::cout << info->vkCode << '\n';
 		switch (info->vkCode)
 		{
 		case VK_CONTROL:
