@@ -12,6 +12,9 @@ config::config()
 			esp = json.value<struct esp>("esp", {});
 			aimbot = json.value<struct aimbot>("aimbot", {});
 			trigger = json.value<struct trigger>("trigger", {});
+			skin_changer = json.value<struct skin_changer>("skin_changer", {});
+			clan_tag_changer = json.value<struct clan_tag_changer>("clan_tag_changer", {});
+			misc = json.value<struct misc>("misc", {});
 		}
 	}
 }
