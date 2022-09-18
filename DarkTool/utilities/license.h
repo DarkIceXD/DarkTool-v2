@@ -1,21 +1,23 @@
 #pragma once
-#include <string>
+#include "user_db.h"
 
 namespace license
 {
 	enum class status
 	{
-		INVALID,
+		INVALID_HWID,
+		USER_NOT_FOUND,
+		NO_PERMISSION,
 		EXPIRED,
 		VALID
 	};
-	struct user {
-		uint32_t hwid;
-		uint32_t uid;
+	struct result
+	{
+		user_db::user user;
+		uint64_t my_hwid;
 		status status;
-		time_t time_left;
 	};
-	uint32_t generate_hwid();
-	user check();
+	uint64_t generate_hwid();
+	result check(const user_db::user::TOOL_FLAGS flag);
 	const char* status_to_str(const status s);
 }

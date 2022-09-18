@@ -193,13 +193,14 @@
     <ClCompile Include="game\weapon.cpp" />
     <ClCompile Include="game\hitbox_manager.cpp" />
     <ClCompile Include="utilities\license.cpp" />
+    <ClCompile Include="utilities\user_db.cpp" />
     <ClCompile Include="utilities\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game\client_state.h" />
-    <ClInclude Include="config\common.h" />
+    <ClInclude Include="utilities\common.h" />
     <ClInclude Include="config\config.h" />
-    <ClInclude Include="config\json.hpp" />
+    <ClInclude Include="utilities\json.hpp" />
     <ClInclude Include="features\Aimlock.h" />
     <ClInclude Include="features\Bhop.h" />
     <ClInclude Include="features\Chams.h" />
@@ -240,7 +241,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="game\hitbox_manager.h" />
     <ClInclude Include="utilities\license.h" />
-    <ClInclude Include="utilities\SimpleIni.h" />
+    <ClInclude Include="utilities\user_db.h" />
     <ClInclude Include="utilities\utils.h" />
     <ClInclude Include="utilities\xorstr.h" />
     <ClInclude Include="game\weapon.h" />

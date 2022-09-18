@@ -114,6 +114,9 @@
     <ClCompile Include="utilities\license.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\user_db.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="features\Bhop.h">
@@ -161,13 +164,13 @@
     <ClInclude Include="features\Aimlock.h">
       <Filter>Headerdateien\Cheats</Filter>
     </ClInclude>
-    <ClInclude Include="config\common.h">
+    <ClInclude Include="utilities\common.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="config\config.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="config\json.hpp">
+    <ClInclude Include="utilities\json.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="features\features.h">
@@ -251,13 +254,13 @@
     <ClInclude Include="game\hitbox_manager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\SimpleIni.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\utils.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="utilities\license.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\user_db.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

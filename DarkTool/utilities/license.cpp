@@ -1,50 +1,56 @@
 #include "License.h"
 #include "utils.h"
-#include "SimpleIni.h"
 #include "xorstr.h"
+#include <Windows.h>
 #include <ctime>
 
-uint32_t license::generate_hwid()
+uint64_t license::generate_hwid()
 {
-	constexpr auto size = 50;
-	char hwid[size];
-	GetVolumeNameForVolumeMountPointA(xorstr("C:\\"), hwid, size);
-	hwid[size - 1] = 0;
-	return util::hash(hwid);
+	HW_PROFILE_INFOA hwprofinfo;
+	if (!GetCurrentHwProfileA(&hwprofinfo))
+		return 0;
+
+	return util::hash(hwprofinfo.szHwProfileGuid);
 }
 
-license::user license::check()
+license::result license::check(const user_db::user::TOOL_FLAGS flag)
 {
-	const auto tool = xorstr("darktool");
 	const auto server = xorstr("darkicexd.github.io");
-	const auto object = xorstr("/darktool/keys.ini");
-	user user = {};
-	user.hwid = license::generate_hwid();
-	CSimpleIniA ini;
-	if (util::hash(server) == 729258906494008491U && util::hash(object) == 3076906676292336621U)
+	const auto object = xorstr("/darktool/users");
+
+	result user{};
+	user.my_hwid = license::generate_hwid();
+	if (!user.my_hwid)
 	{
-		const auto data = util::download(server, object);
-		ini.LoadData(data.data(), data.size());
-	}
-	const auto section = std::to_string(user.hwid);
-	if (!ini.GetBoolValue(section.c_str(), tool))
+		user.status = status::INVALID_HWID;
 		return user;
-	user.uid = ini.GetLongValue(section.c_str(), xorstr("uid"));
-	const time_t expire_time = std::stoll(ini.GetValue(section.c_str(), xorstr("time"), xorstr("0")));
-	const auto time = std::time(nullptr);
-	if (expire_time == 0)
-	{
-		user.status = status::VALID;
 	}
-	else if (expire_time > time)
+
+	user_db db{};
+	if (util::hash(server) == 729258906494008491U && util::hash(object) == 820864865764569909U)
+		db.load(util::download(server, object));
+
+	const auto opt_user = db.find_user_by_hwid(user.my_hwid);
+	if (!opt_user)
 	{
-		user.status = status::VALID;
-		user.time_left = expire_time - time;
+		user.status = status::USER_NOT_FOUND;
+		return user;
 	}
-	else
+
+	user.user = *opt_user;
+	if (!(user.user.tools & flag))
+	{
+		user.status = status::NO_PERMISSION;
+		return user;
+	}
+
+	if (user.user.expire != 0 && user.user.expire < std::time(nullptr))
 	{
 		user.status = status::EXPIRED;
+		return user;
 	}
+
+	user.status = status::VALID;
 	return user;
 }
 
@@ -52,11 +58,15 @@ const char* license::status_to_str(const status s)
 {
 	switch (s)
 	{
+	case status::INVALID_HWID:
+		return "Invalid HWID";
+	case status::USER_NOT_FOUND:
+		return "User not found";
+	case status::NO_PERMISSION:
+		return "No permission for this tool";
 	case status::EXPIRED:
 		return "Expired";
 	case status::VALID:
 		return "Valid";
-	default:
-		return "Invalid";
 	}
 }

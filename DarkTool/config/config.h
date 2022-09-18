@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "../utilities/common.h"
 #include <Windows.h>
 #include "../game/structs.h"
 

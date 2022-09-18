@@ -71,10 +71,14 @@ static void fast_loop()
 int main()
 {
 	std::cout << "Checking license... ";
-	const auto user = license::check();
+	const auto user = license::check(user_db::user::DARKTOOL);
 	std::cout << license::status_to_str(user.status) << '\n';
 	if (user.status != license::status::VALID)
+	{
+		std::cout << "HWID: " << std::hex << user.my_hwid << std::dec << '\n';
+		std::getchar();
 		return 0;
+	}
 	std::cout << "Waiting for csgo... ";
 	while (!memory::initialize(L"csgo.exe"))
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
