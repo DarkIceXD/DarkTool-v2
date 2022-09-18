@@ -198,7 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game\client_state.h" />
-    <ClInclude Include="utilities\common.h" />
     <ClInclude Include="config\config.h" />
     <ClInclude Include="utilities\json.hpp" />
     <ClInclude Include="features\Aimlock.h" />

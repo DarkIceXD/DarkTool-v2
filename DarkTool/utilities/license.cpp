@@ -68,5 +68,7 @@ const char* license::status_to_str(const status s)
 		return "Expired";
 	case status::VALID:
 		return "Valid";
+	default:
+		return "Invalid";
 	}
 }

@@ -164,9 +164,6 @@
     <ClInclude Include="features\Aimlock.h">
       <Filter>Headerdateien\Cheats</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\common.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="config\config.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

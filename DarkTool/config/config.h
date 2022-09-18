@@ -1,5 +1,5 @@
 #pragma once
-#include "../utilities/common.h"
+#include "../utilities/json.hpp"
 #include <Windows.h>
 #include "../game/structs.h"
 
@@ -45,7 +45,7 @@ struct rgb {
 			b = 0;
 		}
 	}
-	JSON_SERIALIZE(rgb, r, g, b, a, enabled)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(rgb, r, g, b, a, enabled)
 };
 
 struct keybind {
@@ -59,7 +59,7 @@ struct keybind {
 		else if (type == 2)
 			enabled = GetAsyncKeyState(key_bind);
 	}
-	JSON_SERIALIZE(keybind, enabled, type, key_bind)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(keybind, enabled, type, key_bind)
 };
 
 struct config {
@@ -135,10 +135,10 @@ struct config {
 		keybind bind{};
 		struct color {
 			rgb base, visible;
-			JSON_SERIALIZE(color, base, visible)
+			NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(color, base, visible)
 		}
 		box{ { 1, 0, 0, 1 }, { 0, 1, 0, 1 } }, skeleton{ { 1, 0, 0, 0.5f }, { 0, 1, 0, 0.5f } }, glow{ { 1, 0, 0, 1 }, { 0, 1, 0, 1 } };
-		JSON_SERIALIZE(esp, bind, box, skeleton, glow)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(esp, bind, box, skeleton, glow)
 	} esp;
 	struct aimbot {
 		keybind bind{};
@@ -167,7 +167,7 @@ struct config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, bind, fov, smoothness, head, chest, stomach, visibility_check, show_aim_spot)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(aimbot, bind, fov, smoothness, head, chest, stomach, visibility_check, show_aim_spot)
 	} aimbot;
 	struct trigger {
 		keybind bind{};
@@ -184,7 +184,7 @@ struct config {
 				return 0;
 			return hitchance[i];
 		}
-		JSON_SERIALIZE(trigger, bind, weapon_selection, hitchance)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(trigger, bind, weapon_selection, hitchance)
 	} trigger;
 	struct skin_changer
 	{
@@ -201,7 +201,7 @@ struct config {
 			float wear{ FLT_MIN };
 			std::string nametag;
 			bool count_kills{ true };
-			JSON_SERIALIZE(skin, paint_kit, stat_trak, seed, quality, wear, nametag, count_kills)
+			NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(skin, paint_kit, stat_trak, seed, quality, wear, nametag, count_kills)
 		};
 		std::array<skin, 35> skins;
 		int knife_selection{ 0 };
@@ -242,7 +242,7 @@ struct config {
 			default: return 0;
 			}
 		}
-		JSON_SERIALIZE(skin_changer, enabled, auto_save, selection, skins, knife_selection)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(skin_changer, enabled, auto_save, selection, skins, knife_selection)
 	}skin_changer;
 	struct clan_tag_changer {
 		bool enabled{ false };
@@ -260,7 +260,7 @@ struct config {
 			std::string name{ "New Clan Tag" };
 			int delay{ 400 };
 			std::vector<std::string> tags{};
-			JSON_SERIALIZE(clan_tag, name, delay, tags)
+			NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(clan_tag, name, delay, tags)
 		};
 		std::vector<clan_tag> tags{ {"DarkToolX", 400, {".........","........D",".......D.","......D..",".....D...","....D....","...D.....","..D......",".D.......","D........","D.......a","D......a.","D.....a..","D....a...","D...a....","D..a.....","D.a......","Da.......","Da......r","Da.....r.","Da....r..","Da...r...","Da..r....","Da.r.....","Dar......","Dar.....k","Dar....k.","Dar...k..","Dar..k...","Dar.k....","Dark.....","Dark....T","Dark...T.","Dark..T..","Dark.T...","DarkT....","DarkT...o","DarkT..o.","DarkT.o..","DarkTo...","DarkTo..o","DarkTo.o.","DarkToo..","DarkToo.l","DarkTool.","DarkToolX","DarkTool.","DarkToo.l","DarkToo..","DarkTo.o.","DarkTo..o","DarkTo...","DarkT.o..","DarkT..o.","DarkT...o","DarkT....","Dark.T...","Dark..T..","Dark...T.","Dark....T","Dark.....","Dar.k....","Dar..k...","Dar...k..","Dar....k.","Dar.....k","Dar......","Da.r.....","Da..r....","Da...r...","Da....r..","Da.....r.","Da......r","Da.......","D.a......","D..a.....","D...a....","D....a...","D.....a..","D......a.","D.......a","D........",".D.......","..D......","...D.....","....D....",".....D...","......D..",".......D.","........D"}} };
 		clan_tag& get_selected()
@@ -270,15 +270,15 @@ struct config {
 			selected = std::clamp(selected, 0U, tags.size() - 1);
 			return tags.at(selected);
 		}
-		JSON_SERIALIZE(clan_tag_changer, enabled, selected, tags)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(clan_tag_changer, enabled, selected, tags)
 	}clan_tag_changer;
 	struct misc {
 		bool bhop{ false };
 		bool no_flash{ false };
 		bool nade_helper{ false };
-		JSON_SERIALIZE(misc, bhop, no_flash, nade_helper)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(misc, bhop, no_flash, nade_helper)
 	}misc;
-	JSON_SERIALIZE(config, esp, aimbot, trigger, skin_changer, clan_tag_changer, misc)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(config, esp, aimbot, trigger, skin_changer, clan_tag_changer, misc)
 };
 
 inline config* cfg;

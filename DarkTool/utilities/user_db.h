@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "json.hpp"
 #include <bitset>
 
 struct user_db {
@@ -28,7 +28,7 @@ struct user_db {
 			DARKTOOLX = 1 << 2,
 			DARKTOOL_WARZONE = 1 << 3,
 		};
-		JSON_SERIALIZE(user, uid, expire, tools, hwid)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(user, uid, expire, tools, hwid)
 	};
 	[[nodiscard]] constexpr uint64_t get_highest_uid() {
 		uint64_t highest = 0;
@@ -45,7 +45,7 @@ struct user_db {
 		return std::nullopt;
 	}
 	std::vector<user> users;
-	JSON_SERIALIZE(user_db, users)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(user_db, users)
 };
 
 constexpr std::array tools = { "DARKINJECT0R", "DARKTOOL", "DARKTOOLX", "DARKTOOL_WARZONE" };
