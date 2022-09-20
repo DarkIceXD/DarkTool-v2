@@ -75,7 +75,7 @@ int main()
 	std::cout << license::status_to_str(user.status) << '\n';
 	if (user.status != license::status::VALID)
 	{
-		std::cout << "HWID: " << std::hex << user.my_hwid << std::dec << '\n';
+		std::cout << "HWID: " << std::hex << user.my_hwid << '\n';
 		std::getchar();
 		return 0;
 	}

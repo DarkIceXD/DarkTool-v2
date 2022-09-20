@@ -1,4 +1,4 @@
-#include "License.h"
+#include "license.h"
 #include "utils.h"
 #include "xorstr.h"
 #include <Windows.h>
