@@ -22,6 +22,29 @@ struct matrix3x4 {
 	};
 };
 
+struct player_info
+{
+	uint64_t version;
+	union
+	{
+		uint64_t steam_id64;
+		struct
+		{
+			uint32_t xuid_low;
+			uint32_t xuid_high;
+		};
+	};
+	char name[128];
+	int user_id;
+	char steam_id[33];
+	uint32_t friends_id;
+	char friends_name[128];
+	bool fake_player;
+	bool is_hltv;
+	unsigned int customfiles[4];
+	unsigned char filesdownloaded;
+};
+
 struct glow_object_manager {
 	uintptr_t objects;
 	int allocationCount;
@@ -52,7 +75,7 @@ struct global_vars {
 	float realtime;
 	int framecount;
 	float absolute_frame_time;
-	uint8_t pad0[4];
+	float absolute_frame_start_time;
 	float currenttime;
 	float frametime;
 	int max_clients;

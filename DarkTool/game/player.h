@@ -51,5 +51,7 @@ struct player {
 	[[nodiscard]] matrix3x4 get_bone(const uintptr_t bone_matrix, const int bone) const;
 	[[nodiscard]] static bool get_bounding_box_fallback(vector2& min, vector2& max, const matrix4x4& matrix, const vector3& origin_pos, const int flags);
 	[[nodiscard]] static float estimate_head_position(const int flags);
+	[[nodiscard]] static int base_to_index(const uintptr_t base);
+	[[nodiscard]] static player_info get_player_info(const uintptr_t items, const int index);
 	uintptr_t entity;
 };

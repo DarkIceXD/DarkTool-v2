@@ -70,15 +70,6 @@ constexpr unsigned int get_model_index(const short item_index, const data::game&
 void features::skin_changer(const data::game& data)
 {
 	static unsigned int modelindex = 0;
-	union {
-		int64_t steamID64;
-		struct
-		{
-			int32_t xUIDLow;
-			int32_t xUIDHigh;
-		};
-	} steamID;
-	steamID.steamID64 = _byteswap_uint64(memory::read<int64_t>(memory::read<uintptr_t>(memory::read<uintptr_t>(memory::read<uintptr_t>(data.client_state.get_player_info() + 0x40) + 0xC) + 0x28 + 0x34 * (memory::read<int>(data.local_player.entity.entity + 0x64) - 1)) + 0x8));
 	auto rewrite = cfg->skin_changer.update_now;
 	const auto knife = cfg->skin_changer.get_knife_index();
 	for (int i = 0; i < 4; i++)
@@ -88,7 +79,7 @@ void features::skin_changer(const data::game& data)
 			continue;
 
 		const auto owner = weapon.get_xuid_low();
-		if (owner != steamID.xUIDLow)
+		if (owner != data.local_player.xuid_low)
 			continue;
 
 		const auto def_index = weapon.get_definition_index();
@@ -117,7 +108,7 @@ void features::skin_changer(const data::game& data)
 		weapon.set_wear(skin->wear);
 		if (skin->stat_trak)
 		{
-			weapon.set_account_id(steamID.xUIDLow);
+			weapon.set_account_id(data.local_player.xuid_low);
 			weapon.set_stattrak(skin->stat_trak);
 		}
 		if (skin->seed)

@@ -14,6 +14,7 @@ namespace data {
 			bool valid;
 		};
 		std::array<bone_screen, bone_count> hitboxes_screen;
+		char name[128];
 		int health;
 		int flags;
 		bool visible;
@@ -26,6 +27,7 @@ namespace data {
 		vector2 aim_punch_angle;
 		vector2 view_angles;
 		player entity{0};
+		uint32_t xuid_low;
 		float next_fire_time;
 		float inaccuracy;
 		int clip;

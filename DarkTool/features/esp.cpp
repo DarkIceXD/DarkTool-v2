@@ -26,10 +26,9 @@ void features::esp(const data::game& data, ImDrawList* d, const matrix4x4& view_
 
 		const auto box_color = player.visible ? box_visible_color : box_base_color;
 		d->AddRect(min, max, box_color);
-		/*const auto middle = (max.x - min.x) / 2 + min.x;
-		char name[64] = "test";
-		const auto name_size = ImGui::CalcTextSize(name);
-		d->AddText({ middle - name_size.x / 2, max.y - name_size.y }, IM_COL32_WHITE, name);*/
+		const auto middle = (max.x - min.x) / 2 + min.x;
+		const auto name_size = ImGui::CalcTextSize(player.name);
+		d->AddText({ middle - name_size.x / 2, max.y - name_size.y }, IM_COL32_WHITE, player.name);
 		const ImVec2 hp_min = { max.x + 2, min.y };
 		const auto hp = player.health / 100.f;
 		const ImVec2 hp_max = { hp_min.x + 3, hp_min.y + (max.y - min.y) * hp };

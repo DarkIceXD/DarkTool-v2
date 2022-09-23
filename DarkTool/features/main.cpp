@@ -59,6 +59,10 @@ void data::update(data::game& data)
 	data.local_player.next_fire_time = active_weapon.get_next_primary_attack() - data.vars.currenttime;
 	data.local_player.inaccuracy = active_weapon.get_inaccuracy();
 	const auto local_player_index = data.client_state.get_local_player_index();
+	const auto items = memory::read<uintptr_t>(memory::read<uintptr_t>(data.client_state.get_player_info() + 0x40) + 0xC);
+	auto local_player_info = player::get_player_info(items, player::base_to_index(data.local_player.entity.entity));
+	local_player_info.steam_id64 = _byteswap_uint64(local_player_info.steam_id64);
+	data.local_player.xuid_low = local_player_info.xuid_low;
 	for (int i = 1; i < data.vars.max_clients; i++)
 	{
 		auto& player_data = data.players[i - 1];
@@ -77,6 +81,8 @@ void data::update(data::game& data)
 		if (player_data.health < 1)
 			continue;
 
+		const auto info = player::get_player_info(items, i);
+		strcpy_s(player_data.name, info.name);
 		player_data.flags = p.get_flags();
 		player_data.gun_game_immunity = p.has_gun_game_immunity();
 		player_data.friendly = local_team == p.get_team();
@@ -95,6 +101,7 @@ void data::update(data::game& data)
 	data.valid = true;
 	features::no_flash(data);
 	features::nade_helper(data);
+	features::clan_tag_changer(data);
 }
 
 void data::fast_loop(const data::game& data)

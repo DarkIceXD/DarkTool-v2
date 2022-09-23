@@ -49,7 +49,7 @@ void features::clan_tag_changer(const data::game& data)
 	const auto& tag = cfg->clan_tag_changer.get_selected();
 	const auto size = tag.tags.size();
 	static size_t index = 0;
-	const auto temp_index = (int)(data.vars.currenttime * 1000 / tag.delay) % size;
+	const auto temp_index = static_cast<size_t>(data.vars.currenttime * 1000 / tag.delay) % size;
 	if (index != temp_index || (size == 1 && !(data.vars.tick_count % 300)))
 	{
 		index = temp_index;

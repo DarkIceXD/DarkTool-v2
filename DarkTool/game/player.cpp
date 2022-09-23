@@ -124,3 +124,13 @@ float player::estimate_head_position(const int flags)
 	else
 		return 72;
 }
+
+int player::base_to_index(const uintptr_t base)
+{
+	return memory::read<int>(base + 0x64) - 1;
+}
+
+player_info player::get_player_info(const uintptr_t items, const int index)
+{
+	return memory::read<player_info>(memory::read<uintptr_t>(items + 0x28 + index * 0x34));
+}
