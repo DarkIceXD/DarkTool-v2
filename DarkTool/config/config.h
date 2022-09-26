@@ -63,8 +63,9 @@ struct keybind {
 };
 
 struct config {
-	static constexpr const char* weapon_list_all = "Knife\0CZ75-Auto\0Desert Eagle\0Dual Berettas\0Five-SeveN\0Glock-18\0P2000\0P250\0R8 Revolver\0Tec-9\0USP-S\0AK-47\0AUG\0AWP\0FAMAS\0G3SG1\0Galil AR\0M4A1-S\0M4A4\0SCAR-20\0SG 553\0SSG 08\0MAC-10\0MP5-SD\0MP7\0MP9\0PP-Bizon\0P90\0UMP-45\0Nova\0MAG-7\0Sawed-Off\0XM1014\0M249\0Negev\0";
-	static constexpr const char* weapon_list = weapon_list_all + 6;
+	static constexpr auto file_name = "DarkTool.json";
+	static constexpr auto weapon_list_all = "Knife\0CZ75-Auto\0Desert Eagle\0Dual Berettas\0Five-SeveN\0Glock-18\0P2000\0P250\0R8 Revolver\0Tec-9\0USP-S\0AK-47\0AUG\0AWP\0FAMAS\0G3SG1\0Galil AR\0M4A1-S\0M4A4\0SCAR-20\0SG 553\0SSG 08\0MAC-10\0MP5-SD\0MP7\0MP9\0PP-Bizon\0P90\0UMP-45\0Nova\0MAG-7\0Sawed-Off\0XM1014\0M249\0Negev\0";
+	static constexpr auto weapon_list = weapon_list_all + 6;
 	static constexpr int get_weapon_index(const int weapon) noexcept
 	{
 		switch (weapon)
@@ -128,9 +129,6 @@ struct config {
 		default: return -1;
 		}
 	}
-	static constexpr const char* conf_name = "DarkTool.json";
-	config();
-	void save() const;
 	struct esp {
 		keybind bind{};
 		struct color {
@@ -281,4 +279,4 @@ struct config {
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(config, esp, aimbot, trigger, skin_changer, clan_tag_changer, misc)
 };
 
-inline config* cfg;
+inline config cfg;

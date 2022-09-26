@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="config\config.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="features\aimbot.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -112,9 +109,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="utilities\license.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="utilities\user_db.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -258,6 +252,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="utilities\user_db.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\json_utils.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

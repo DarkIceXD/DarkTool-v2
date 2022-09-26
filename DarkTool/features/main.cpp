@@ -13,7 +13,7 @@ void overlay::draw(data::game& data, ImDrawList* d)
 
 	const auto view_matrix = memory::read<matrix4x4>(offsets::dwViewMatrix);
 
-	if ((cfg->esp.skeleton.base.to_u32() & 0xFF000000) || (cfg->esp.skeleton.visible.to_u32() & 0xFF000000))
+	if ((cfg.esp.skeleton.base.to_u32() & 0xFF000000) || (cfg.esp.skeleton.visible.to_u32() & 0xFF000000))
 		for (auto& player : data.players)
 		{
 			if (!player.valid)

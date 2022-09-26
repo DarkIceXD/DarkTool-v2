@@ -166,7 +166,6 @@
     <ClCompile Include="features\misc.cpp" />
     <ClCompile Include="features\skin_changer.cpp" />
     <ClCompile Include="game\client_state.cpp" />
-    <ClCompile Include="config\config.cpp" />
     <ClCompile Include="DarkTool.cpp" />
     <ClCompile Include="features\aimbot.cpp" />
     <ClCompile Include="features\esp.cpp" />
@@ -193,7 +192,6 @@
     <ClCompile Include="game\weapon.cpp" />
     <ClCompile Include="game\hitbox_manager.cpp" />
     <ClCompile Include="utilities\license.cpp" />
-    <ClCompile Include="utilities\user_db.cpp" />
     <ClCompile Include="utilities\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +237,7 @@
     <ClInclude Include="overlay\overlay.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="game\hitbox_manager.h" />
+    <ClInclude Include="utilities\json_utils.h" />
     <ClInclude Include="utilities\license.h" />
     <ClInclude Include="utilities\user_db.h" />
     <ClInclude Include="utilities\utils.h" />

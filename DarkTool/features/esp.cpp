@@ -4,14 +4,14 @@
 
 void features::esp(const data::game& data, ImDrawList* d, const matrix4x4& view_matrix)
 {
-	cfg->esp.bind.run();
-	if (!cfg->esp.bind.enabled)
+	cfg.esp.bind.run();
+	if (!cfg.esp.bind.enabled)
 		return;
 
-	const auto box_base_color = cfg->esp.box.base.to_u32();
-	const auto box_visible_color = cfg->esp.box.visible.to_u32();
-	const auto skeleton_base_color = cfg->esp.skeleton.base.to_u32();
-	const auto skeleton_visible_color = cfg->esp.skeleton.visible.to_u32();
+	const auto box_base_color = cfg.esp.box.base.to_u32();
+	const auto box_visible_color = cfg.esp.box.visible.to_u32();
+	const auto skeleton_base_color = cfg.esp.skeleton.base.to_u32();
+	const auto skeleton_visible_color = cfg.esp.skeleton.visible.to_u32();
 	for (const auto& player : data.players)
 	{
 		if (!player.valid)

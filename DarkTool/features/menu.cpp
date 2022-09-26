@@ -1,6 +1,7 @@
 #include "../overlay/overlay.hpp"
 #include "../config/config.h"
 #include "../imgui/imgui_stdlib.h"
+#include "../utilities/json_utils.h"
 
 namespace ImGui {
 	void KeyBind(const char* label, int* selection, int* key_bind, bool* did_find) {
@@ -1184,24 +1185,24 @@ void overlay::menu()
 		{
 			if (ImGui::BeginTabItem("ESP"))
 			{
-				ImGui::Checkbox("Enabled", &cfg->esp.bind.enabled);
+				ImGui::Checkbox("Enabled", &cfg.esp.bind.enabled);
 				static auto esp_found = true;
-				ImGui::KeyBind("ESP", &cfg->esp.bind.type, &cfg->esp.bind.key_bind, &esp_found);
-				ImGui::ColorEdit4("Box Color", &cfg->esp.box.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
-				ImGui::ColorEdit4("Box Color Visible", &cfg->esp.box.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
-				ImGui::ColorEdit4("Skeleton Color", &cfg->esp.skeleton.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
-				ImGui::ColorEdit4("Skeleton Color Visible", &cfg->esp.skeleton.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
-				ImGui::ColorEdit4("Glow Color", &cfg->esp.glow.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
-				ImGui::ColorEdit4("Glow Color Visible", &cfg->esp.glow.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::KeyBind("ESP", &cfg.esp.bind.type, &cfg.esp.bind.key_bind, &esp_found);
+				ImGui::ColorEdit4("Box Color", &cfg.esp.box.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Box Color Visible", &cfg.esp.box.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Skeleton Color", &cfg.esp.skeleton.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Skeleton Color Visible", &cfg.esp.skeleton.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Glow Color", &cfg.esp.glow.base.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Glow Color Visible", &cfg.esp.glow.visible.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Aimbot"))
 			{
-				ImGui::Checkbox("Enabled", &cfg->aimbot.bind.enabled);
+				ImGui::Checkbox("Enabled", &cfg.aimbot.bind.enabled);
 				static auto aimbot_found = true;
-				ImGui::KeyBind("Aimbot", &cfg->aimbot.bind.type, &cfg->aimbot.bind.key_bind, &aimbot_found);
-				ImGui::SliderFloat("Fov", &cfg->aimbot.fov, 1, 90);
-				ImGui::SliderFloat("Smoothness", &cfg->aimbot.smoothness, 1, 10);
+				ImGui::KeyBind("Aimbot", &cfg.aimbot.bind.type, &cfg.aimbot.bind.key_bind, &aimbot_found);
+				ImGui::SliderFloat("Fov", &cfg.aimbot.fov, 1, 90);
+				ImGui::SliderFloat("Smoothness", &cfg.aimbot.smoothness, 1, 10);
 				if (ImGui::BeginTable("hitbox", 2, ImGuiTableFlags_SizingStretchSame))
 				{
 					ImGui::TableSetupColumn("Hitbox");
@@ -1212,47 +1213,47 @@ void overlay::menu()
 					ImGui::TableNextColumn();
 					ImGui::TextUnformatted("Head");
 					ImGui::TableNextColumn();
-					ImGui::Checkbox("##normal", &cfg->aimbot.head);
+					ImGui::Checkbox("##normal", &cfg.aimbot.head);
 					ImGui::PopID();
 					ImGui::PushID(1);
 					ImGui::TableNextColumn();
 					ImGui::TextUnformatted("Chest");
 					ImGui::TableNextColumn();
-					ImGui::Checkbox("##normal", &cfg->aimbot.chest);
+					ImGui::Checkbox("##normal", &cfg.aimbot.chest);
 					ImGui::PopID();
 					ImGui::PushID(2);
 					ImGui::TableNextColumn();
 					ImGui::TextUnformatted("Stomach");
 					ImGui::TableNextColumn();
-					ImGui::Checkbox("##normal", &cfg->aimbot.stomach);
+					ImGui::Checkbox("##normal", &cfg.aimbot.stomach);
 					ImGui::PopID();
 					ImGui::EndTable();
 				}
-				ImGui::Checkbox("Visibility Check", &cfg->aimbot.visibility_check);
-				ImGui::Checkbox("Show aim spot", &cfg->aimbot.show_aim_spot);
+				ImGui::Checkbox("Visibility Check", &cfg.aimbot.visibility_check);
+				ImGui::Checkbox("Show aim spot", &cfg.aimbot.show_aim_spot);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Trigger"))
 			{
-				ImGui::Checkbox("Enabled", &cfg->trigger.bind.enabled);
+				ImGui::Checkbox("Enabled", &cfg.trigger.bind.enabled);
 				static auto trigger_found = true;
-				ImGui::KeyBind("Trigger", &cfg->trigger.bind.type, &cfg->trigger.bind.key_bind, &trigger_found);
-				ImGui::Combo("Weapon", &cfg->trigger.weapon_selection, config::weapon_list);
-				ImGui::SliderInt("Hitchance", &cfg->trigger.get_selection(), 0, 100);
+				ImGui::KeyBind("Trigger", &cfg.trigger.bind.type, &cfg.trigger.bind.key_bind, &trigger_found);
+				ImGui::Combo("Weapon", &cfg.trigger.weapon_selection, config::weapon_list);
+				ImGui::SliderInt("Hitchance", &cfg.trigger.get_selection(), 0, 100);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Skin Changer"))
 			{
-				ImGui::Checkbox("Enabled", &cfg->skin_changer.enabled);
-				ImGui::Checkbox("Auto Save", &cfg->skin_changer.auto_save);
-				ImGui::Combo("Weapon", &cfg->skin_changer.selection, config::weapon_list_all);
+				ImGui::Checkbox("Enabled", &cfg.skin_changer.enabled);
+				ImGui::Checkbox("Auto Save", &cfg.skin_changer.auto_save);
+				ImGui::Combo("Weapon", &cfg.skin_changer.selection, config::weapon_list_all);
 				ImGui::Separator();
-				if (cfg->skin_changer.selection == 0)
+				if (cfg.skin_changer.selection == 0)
 				{
-					if (ImGui::Combo("Knife Type", &cfg->skin_changer.knife_selection, "-\0Bayonet\0Classic\0Flip\0Gut\0Karambit\0M9 Bayonet\0Huntsman\0Falchion\0Bowie\0Butterfly\0Shadow Daggers\0Paracord\0Survival\0Ursus\0Navaja\0Nomad\0Stiletto\0Talon\0Skeleton\0"))
-						cfg->skin_changer.update_now = true;
+					if (ImGui::Combo("Knife Type", &cfg.skin_changer.knife_selection, "-\0Bayonet\0Classic\0Flip\0Gut\0Karambit\0M9 Bayonet\0Huntsman\0Falchion\0Bowie\0Butterfly\0Shadow Daggers\0Paracord\0Survival\0Ursus\0Navaja\0Nomad\0Stiletto\0Talon\0Skeleton\0"))
+						cfg.skin_changer.update_now = true;
 				}
-				const int current_index = find(paintkits, cfg->skin_changer.get_selected().paint_kit);
+				const int current_index = find(paintkits, cfg.skin_changer.get_selected().paint_kit);
 				static ImGuiTextFilter filter;
 				filter.Draw("Search Paint Kit");
 				if (ImGui::BeginCombo("Paint Kit", paintkits.at(current_index).name))
@@ -1265,8 +1266,8 @@ void overlay::menu()
 							const bool is_selected = (current_index == i);
 							if (ImGui::Selectable(kit.name, is_selected))
 							{
-								cfg->skin_changer.get_selected().paint_kit = kit.id;
-								cfg->skin_changer.update_now = true;
+								cfg.skin_changer.get_selected().paint_kit = kit.id;
+								cfg.skin_changer.update_now = true;
 							}
 							if (is_selected)
 								ImGui::SetItemDefaultFocus();
@@ -1274,31 +1275,31 @@ void overlay::menu()
 					}
 					ImGui::EndCombo();
 				}
-				if (ImGui::SliderFloat("Wear", &cfg->skin_changer.get_selected().wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat))
-					cfg->skin_changer.update_now = true;
-				if (ImGui::InputInt("Stat Trak", &cfg->skin_changer.get_selected().stat_trak))
-					cfg->skin_changer.update_now = true;
-				if (ImGui::InputInt("Seed", &cfg->skin_changer.get_selected().seed))
-					cfg->skin_changer.update_now = true;
-				if (ImGui::Combo("Quality", &cfg->skin_changer.get_selected().quality, "Normal\0Genuine\0Vintage\0Unusual (Knife)\0Normal\0Community\0Developer\0Self-Made\0Customized\0Strange\0Completed\0Normal\0Tournament\0"))
-					cfg->skin_changer.update_now = true;
-				if (ImGui::InputText("Nametag", &cfg->skin_changer.get_selected().nametag))
-					cfg->skin_changer.update_now = true;
-				if (ImGui::Checkbox("Count Kills", &cfg->skin_changer.get_selected().count_kills))
-					cfg->skin_changer.update_now = true;
+				if (ImGui::SliderFloat("Wear", &cfg.skin_changer.get_selected().wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat))
+					cfg.skin_changer.update_now = true;
+				if (ImGui::InputInt("Stat Trak", &cfg.skin_changer.get_selected().stat_trak))
+					cfg.skin_changer.update_now = true;
+				if (ImGui::InputInt("Seed", &cfg.skin_changer.get_selected().seed))
+					cfg.skin_changer.update_now = true;
+				if (ImGui::Combo("Quality", &cfg.skin_changer.get_selected().quality, "Normal\0Genuine\0Vintage\0Unusual (Knife)\0Normal\0Community\0Developer\0Self-Made\0Customized\0Strange\0Completed\0Normal\0Tournament\0"))
+					cfg.skin_changer.update_now = true;
+				if (ImGui::InputText("Nametag", &cfg.skin_changer.get_selected().nametag))
+					cfg.skin_changer.update_now = true;
+				if (ImGui::Checkbox("Count Kills", &cfg.skin_changer.get_selected().count_kills))
+					cfg.skin_changer.update_now = true;
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Clan Tag Changer"))
 			{
-				ImGui::Checkbox("Enabled", &cfg->clan_tag_changer.enabled);
-				if (ImGui::BeginCombo("Clan Tag", cfg->clan_tag_changer.get_selected().name.c_str()))
+				ImGui::Checkbox("Enabled", &cfg.clan_tag_changer.enabled);
+				if (ImGui::BeginCombo("Clan Tag", cfg.clan_tag_changer.get_selected().name.c_str()))
 				{
-					for (size_t i = 0; i < cfg->clan_tag_changer.tags.size(); i++)
+					for (size_t i = 0; i < cfg.clan_tag_changer.tags.size(); i++)
 					{
-						const auto& current = cfg->clan_tag_changer.tags.at(i);
-						const bool is_selected = (cfg->clan_tag_changer.selected == i);
+						const auto& current = cfg.clan_tag_changer.tags.at(i);
+						const bool is_selected = (cfg.clan_tag_changer.selected == i);
 						if (ImGui::Selectable(current.name.c_str(), is_selected))
-							cfg->clan_tag_changer.selected = i;
+							cfg.clan_tag_changer.selected = i;
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
@@ -1307,47 +1308,47 @@ void overlay::menu()
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("+"))
-					cfg->clan_tag_changer.tags.push_back({});
+					cfg.clan_tag_changer.tags.push_back({});
 				ImGui::SameLine();
-				if (ImGui::Button("-") && cfg->clan_tag_changer.tags.size() > 1)
-					cfg->clan_tag_changer.tags.erase(cfg->clan_tag_changer.tags.begin() + cfg->clan_tag_changer.selected);
-				ImGui::InputText("Name", &cfg->clan_tag_changer.get_selected().name);
-				ImGui::SliderInt("Delay", &cfg->clan_tag_changer.get_selected().delay, 1, 5000, "%d", ImGuiSliderFlags_AlwaysClamp);
+				if (ImGui::Button("-") && cfg.clan_tag_changer.tags.size() > 1)
+					cfg.clan_tag_changer.tags.erase(cfg.clan_tag_changer.tags.begin() + cfg.clan_tag_changer.selected);
+				ImGui::InputText("Name", &cfg.clan_tag_changer.get_selected().name);
+				ImGui::SliderInt("Delay", &cfg.clan_tag_changer.get_selected().delay, 1, 5000, "%d", ImGuiSliderFlags_AlwaysClamp);
 				if (ImGui::Button("Add Tag"))
-					cfg->clan_tag_changer.get_selected().tags.push_back({});
+					cfg.clan_tag_changer.get_selected().tags.push_back({});
 				if (ImGui::BeginTable("tags", 2, ImGuiTableFlags_SizingStretchSame))
 				{
 					ImGui::TableSetupColumn("Clan Tag");
 					ImGui::TableSetupColumn("Delete");
 					ImGui::TableHeadersRow();
 					int del = -1;
-					for (size_t i = 0; i < cfg->clan_tag_changer.get_selected().tags.size(); i++)
+					for (size_t i = 0; i < cfg.clan_tag_changer.get_selected().tags.size(); i++)
 					{
 						ImGui::TableNextRow();
 						ImGui::PushID(i);
 						ImGui::TableNextColumn();
-						ImGui::InputText("##tag", &cfg->clan_tag_changer.get_selected().tags.at(i));
+						ImGui::InputText("##tag", &cfg.clan_tag_changer.get_selected().tags.at(i));
 						ImGui::TableNextColumn();
 						if (ImGui::Button("-"))
 							del = i;
 						ImGui::PopID();
 					}
 					if (del >= 0)
-						cfg->clan_tag_changer.get_selected().tags.erase(cfg->clan_tag_changer.get_selected().tags.begin() + del);
+						cfg.clan_tag_changer.get_selected().tags.erase(cfg.clan_tag_changer.get_selected().tags.begin() + del);
 					ImGui::EndTable();
 				}
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Misc"))
 			{
-				ImGui::Checkbox("Bhop", &cfg->misc.bhop);
-				ImGui::Checkbox("No Flash", &cfg->misc.no_flash);
+				ImGui::Checkbox("Bhop", &cfg.misc.bhop);
+				ImGui::Checkbox("No Flash", &cfg.misc.no_flash);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Config"))
 			{
 				if (ImGui::Button("Save config"))
-					cfg->save();
+					json_utils::save(config::file_name, json_utils::type::JSON, cfg);
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();

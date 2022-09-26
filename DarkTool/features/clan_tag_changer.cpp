@@ -37,7 +37,7 @@ static void set_clantag(const char* tag)
 void features::clan_tag_changer(const data::game& data)
 {
 	static auto clan_tag_changed = false;
-	if (!cfg->clan_tag_changer.enabled)
+	if (!cfg.clan_tag_changer.enabled)
 	{
 		if (clan_tag_changed)
 		{
@@ -46,7 +46,7 @@ void features::clan_tag_changer(const data::game& data)
 		}
 		return;
 	}
-	const auto& tag = cfg->clan_tag_changer.get_selected();
+	const auto& tag = cfg.clan_tag_changer.get_selected();
 	const auto size = tag.tags.size();
 	static size_t index = 0;
 	const auto temp_index = static_cast<size_t>(data.vars.currenttime * 1000 / tag.delay) % size;

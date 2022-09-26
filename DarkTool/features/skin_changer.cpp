@@ -70,8 +70,8 @@ constexpr unsigned int get_model_index(const short item_index, const data::game&
 void features::skin_changer(const data::game& data)
 {
 	static unsigned int modelindex = 0;
-	auto rewrite = cfg->skin_changer.update_now;
-	const auto knife = cfg->skin_changer.get_knife_index();
+	auto rewrite = cfg.skin_changer.update_now;
+	const auto knife = cfg.skin_changer.get_knife_index();
 	for (int i = 0; i < 4; i++)
 	{
 		const weapon weapon = memory::read<uintptr_t>(offsets::dwEntityList + data.local_player.entity.get_weapon(i) * 0x10);
@@ -93,7 +93,7 @@ void features::skin_changer(const data::game& data)
 			weapon.set_model_index(modelindex);
 		}
 
-		const auto skin = cfg->skin_changer.get_skin(def_index);
+		const auto skin = cfg.skin_changer.get_skin(def_index);
 		if (!skin)
 			continue;
 
@@ -128,7 +128,7 @@ void features::skin_changer(const data::game& data)
 	if (rewrite)
 	{
 		data.client_state.set_delta_ticks(-1);
-		cfg->skin_changer.update_now = false;
+		cfg.skin_changer.update_now = false;
 	}
 	else
 	{

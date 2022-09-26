@@ -27,8 +27,8 @@ float hitchance(const float inaccuracy, const hitbox hitbox, const float distanc
 
 void features::trigger(const data::game& data)
 {
-	cfg->trigger.bind.run();
-	if (!cfg->trigger.bind.enabled)
+	cfg.trigger.bind.run();
+	if (!cfg.trigger.bind.enabled)
 		return;
 
 	if (!data.local_player.clip)
@@ -52,7 +52,7 @@ void features::trigger(const data::game& data)
 	if (player.gun_game_immunity)
 		return;
 
-	if (hitchance(data.local_player.inaccuracy, hitbox::HEAD, (data.local_player.origin - player.origin).length()) < cfg->trigger.get_hitchance(def_index))
+	if (hitchance(data.local_player.inaccuracy, hitbox::HEAD, (data.local_player.origin - player.origin).length()) < cfg.trigger.get_hitchance(def_index))
 		return;
 
 	memory::write(offsets::dwForceAttack, 6);

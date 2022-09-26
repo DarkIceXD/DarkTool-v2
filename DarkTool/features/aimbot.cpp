@@ -25,8 +25,8 @@ void aim_at(const vector2& screen, const bool absolute)
 
 void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_matrix)
 {
-	cfg->aimbot.bind.run();
-	if (!cfg->aimbot.bind.enabled)
+	cfg.aimbot.bind.run();
+	if (!cfg.aimbot.bind.enabled)
 		return;
 
 	if (!is_good_weapon(data.local_player.weapon_def_index))
@@ -45,7 +45,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 		if (player.gun_game_immunity)
 			continue;
 
-		if (cfg->aimbot.visibility_check && !player.visible)
+		if (cfg.aimbot.visibility_check && !player.visible)
 			continue;
 
 		const auto& hitbox = player.hitboxes[static_cast<size_t>(hitbox::UPPER_CHEST)];
@@ -58,7 +58,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 		}
 	}
 
-	if (smallest_fov >= FLT_MAX || smallest_fov > cfg->aimbot.fov)
+	if (smallest_fov >= FLT_MAX || smallest_fov > cfg.aimbot.fov)
 		return;
 
 	smallest_fov = FLT_MAX;
@@ -66,7 +66,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 	vector2 best_angle;
 	for (size_t i = 0; i <= static_cast<size_t>(hitbox::MAX); i++)
 	{
-		if (!cfg->aimbot.is_hitbox_enabled(static_cast<hitbox>(i)))
+		if (!cfg.aimbot.is_hitbox_enabled(static_cast<hitbox>(i)))
 			continue;
 
 		const auto& hitbox = p->hitboxes[i];
@@ -80,7 +80,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 		}
 	}
 
-	if (cfg->aimbot.show_aim_spot)
+	if (cfg.aimbot.show_aim_spot)
 	{
 		vector2 best_hitbox_screen;
 		if (math::world_to_screen(view_matrix, best_hitbox, best_hitbox_screen))
@@ -93,7 +93,7 @@ void features::aimbot(data::game& data, ImDrawList* d, const matrix4x4& view_mat
 	if (smallest_fov > 1)
 	{
 		auto diff = (best_angle - data.local_player.view_angles).normalized();
-		best_angle = (data.local_player.view_angles + diff / cfg->aimbot.smoothness).normalized();
+		best_angle = (data.local_player.view_angles + diff / cfg.aimbot.smoothness).normalized();
 	}
 	data.client_state.set_view_angles(best_angle);
 	data.local_player.view_angles = best_angle;

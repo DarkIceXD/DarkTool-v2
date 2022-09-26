@@ -5,7 +5,7 @@
 
 void features::bhop(const data::game& data)
 {
-	if (!cfg->misc.bhop)
+	if (!cfg.misc.bhop)
 		return;
 
 	if (!GetAsyncKeyState(VK_SPACE))
@@ -17,15 +17,15 @@ void features::bhop(const data::game& data)
 
 void features::no_flash(const data::game& data)
 {
-	if (!cfg->misc.no_flash)
+	if (!cfg.misc.no_flash)
 		return;
 
-	data.local_player.entity.set_max_flash_alpha(cfg->misc.no_flash ? 0.f : 255.f);
+	data.local_player.entity.set_max_flash_alpha(cfg.misc.no_flash ? 0.f : 255.f);
 }
 
 void features::nade_helper(const data::game& data)
 {
-	if (!cfg->misc.nade_helper)
+	if (!cfg.misc.nade_helper)
 		return;
 
 
